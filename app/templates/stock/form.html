@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}{{ 'Edit' if row else 'New' }} stock entry{% endblock %}
+{% block content %}
+{{ page_header(('Edit stock entry' if row else 'New stock entry')) }}
+<div class="card card-soft"><div class="card-body">
+<form method="post" class="row g-3">
+  <div class="col-md-6">
+    <label class="form-label">Product</label>
+    <select class="form-select" name="product_id" required>
+      {% for p in products %}
+        <option value="{{ p.product_id }}" {% if row and row.product_id == p.product_id %}selected{% endif %}>{{ p.sku }} — {{ p.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Warehouse</label>
+    <select class="form-select" name="warehouse_id" required>
+      {% for w in warehouses %}
+        <option value="{{ w.warehouse_id }}" {% if row and row.warehouse_id == w.warehouse_id %}selected{% endif %}>{{ w.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Quantity</label>
+    <input class="form-control" type="number" min="0" name="quantity" required value="{{ row.quantity if row else 0 }}">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Reorder level</label>
+    <input class="form-control" type="number" min="0" name="reorder_level" required value="{{ row.reorder_level if row else 5 }}">
+  </div>
+  <div class="col-12 d-flex gap-2">
+    <button class="btn btn-primary"><i class="bi bi-check2"></i> Save</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('stock.list_view') }}">Cancel</a>
+  </div>
+</form>
+</div></div>
+{% endblock %}

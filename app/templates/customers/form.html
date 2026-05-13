@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}{{ 'Edit' if row else 'New' }} customer{% endblock %}
+{% block content %}
+{{ page_header(('Edit customer' if row else 'New customer')) }}
+<div class="card card-soft"><div class="card-body">
+<form method="post" class="row g-3">
+  <div class="col-md-6">
+    <label class="form-label">Full name</label>
+    <input class="form-control" name="full_name" required value="{{ row.full_name if row else '' }}">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Email</label>
+    <input class="form-control" name="email" type="email" required value="{{ row.email if row else '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Phone</label>
+    <input class="form-control" name="phone" value="{{ row.phone if row else '' }}">
+  </div>
+  <div class="col-md-5">
+    <label class="form-label">Address</label>
+    <input class="form-control" name="address" value="{{ row.address if row else '' }}">
+  </div>
+  <div class="col-md-3">
+    <label class="form-label">City</label>
+    <input class="form-control" name="city" value="{{ row.city if row else '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Type</label>
+    <select class="form-select" name="customer_type">
+      <option value="retail" {% if row and row.customer_type == 'retail' %}selected{% endif %}>Retail</option>
+      <option value="wholesale" {% if row and row.customer_type == 'wholesale' %}selected{% endif %}>Wholesale</option>
+    </select>
+  </div>
+  <div class="col-12 d-flex gap-2">
+    <button class="btn btn-primary"><i class="bi bi-check2"></i> Save</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('customers.list_view') }}">Cancel</a>
+  </div>
+</form>
+</div></div>
+{% endblock %}

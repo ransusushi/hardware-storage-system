@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_macros.html" import action_buttons, page_header %}
+{% block title %}Staff{% endblock %}
+{% block content %}
+{{ page_header('Staff', 'People who can log into the system.',
+   (url_for('employees.create') if current_user.role_name == 'admin' else None),
+   'New employee') }}
+<div class="card card-soft"><div class="card-body p-0">
+<div class="table-responsive">
+<table class="table align-middle mb-0">
+<thead><tr><th>Username</th><th>Full name</th><th>Role</th><th>Email</th><th>Phone</th><th>Active</th><th>Hired</th><th></th></tr></thead>
+<tbody>
+{% for r in rows %}
+<tr>
+  <td><code class="inline">{{ r.username }}</code></td>
+  <td><strong>{{ r.full_name }}</strong></td>
+  <td><span class="badge badge-soft">{{ r.role_name }}</span></td>
+  <td>{{ r.email }}</td>
+  <td>{{ r.phone or '—' }}</td>
+  <td>{% if r.is_active %}<span class="badge bg-success">Active</span>{% else %}<span class="badge bg-secondary">Inactive</span>{% endif %}</td>
+  <td><small class="text-muted">{{ r.hired_on }}</small></td>
+  <td class="text-end">
+    {% if current_user.role_name == 'admin' %}
+      {{ action_buttons(url_for('employees.edit', employee_id=r.employee_id),
+                        url_for('employees.delete', employee_id=r.employee_id), 'employee') }}
+    {% endif %}
+  </td>
+</tr>
+{% else %}
+<tr><td colspan="8" class="text-muted text-center py-4">No employees yet.</td></tr>
+{% endfor %}
+</tbody></table></div></div></div>
+{% endblock %}
