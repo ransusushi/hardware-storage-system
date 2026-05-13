@@ -1,43 +1,35 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-end mb-3">
-  <div>
-    <h1 class="page-title h3">Dashboard</h1>
-    <p class="text-muted mb-0">Hi {{ current_user.full_name }} — here's what's happening today.</p>
-  </div>
+<div class="mb-4">
+  <h1 class="page-title">Dashboard</h1>
+  <p class="text-muted mb-0">Hi {{ current_user.full_name }} — here's what's happening today.</p>
 </div>
 
 <div class="row g-3 mb-4">
   {% set cards = [
-    ('Products',   stats.products,    'box-seam',     'products.list_view'),
-    ('Stock units',stats.total_stock, 'layers',       'stock.list_view'),
-    ('Warehouses', stats.warehouses,  'building',     'warehouses.list_view'),
-    ('Suppliers',  stats.suppliers,   'truck',        'suppliers.list_view'),
-    ('Customers',  stats.customers,   'people',       'customers.list_view'),
-    ('Orders',     stats.orders,      'receipt',      'orders.list_view'),
-    ('Staff',      stats.employees,   'person-badge', 'employees.list_view'),
+    ('Products',    stats.products,    'products.list_view'),
+    ('Stock units', stats.total_stock, 'stock.list_view'),
+    ('Warehouses',  stats.warehouses,  'warehouses.list_view'),
+    ('Suppliers',   stats.suppliers,   'suppliers.list_view'),
+    ('Customers',   stats.customers,   'customers.list_view'),
+    ('Orders',      stats.orders,      'orders.list_view'),
+    ('Staff',       stats.employees,   'employees.list_view'),
   ] %}
-  {% for label, value, icon, route in cards %}
+  {% for label, value, route in cards %}
   <div class="col-6 col-md-3">
     <a class="text-decoration-none" href="{{ url_for(route) }}">
-      <div class="kpi-card d-flex align-items-center justify-content-between">
-        <div>
-          <div class="kpi-label">{{ label }}</div>
-          <div class="kpi-value">{{ value }}</div>
-        </div>
-        <i class="bi bi-{{ icon }} kpi-icon"></i>
+      <div class="kpi-card">
+        <div class="kpi-label">{{ label }}</div>
+        <div class="kpi-value">{{ value }}</div>
       </div>
     </a>
   </div>
   {% endfor %}
   <div class="col-6 col-md-3">
-    <div class="kpi-card d-flex align-items-center justify-content-between">
-      <div>
-        <div class="kpi-label">Revenue (paid + shipped)</div>
-        <div class="kpi-value">₱{{ '{:,.2f}'.format(stats.revenue|float) }}</div>
-      </div>
-      <i class="bi bi-cash-coin kpi-icon"></i>
+    <div class="kpi-card">
+      <div class="kpi-label">Revenue</div>
+      <div class="kpi-value">₱{{ '{:,.2f}'.format(stats.revenue|float) }}</div>
     </div>
   </div>
 </div>
@@ -45,26 +37,26 @@
 <div class="row g-3">
   <div class="col-lg-6">
     <div class="card card-soft">
-      <div class="card-body">
-        <h2 class="h6 mb-3"><i class="bi bi-exclamation-triangle text-warning"></i> Low stock alerts</h2>
+      <div class="card-header">Low stock alerts</div>
+      <div class="card-body p-0">
         {% if low_stock %}
         <div class="table-responsive">
-          <table class="table table-sm align-middle">
-            <thead><tr><th>Product</th><th>Warehouse</th><th>Qty</th><th>Reorder</th></tr></thead>
+          <table class="table mb-0">
+            <thead><tr><th>Product</th><th>Warehouse</th><th class="text-end">Qty</th><th class="text-end">Reorder</th></tr></thead>
             <tbody>
             {% for r in low_stock %}
               <tr>
                 <td>{{ r.product }}</td>
                 <td>{{ r.warehouse }}</td>
-                <td><span class="badge bg-danger">{{ r.quantity }}</span></td>
-                <td>{{ r.reorder_level }}</td>
+                <td class="text-end"><span class="badge bg-danger">{{ r.quantity }}</span></td>
+                <td class="text-end">{{ r.reorder_level }}</td>
               </tr>
             {% endfor %}
             </tbody>
           </table>
         </div>
         {% else %}
-          <p class="text-muted small mb-0">All stock levels are healthy.</p>
+          <p class="text-muted small mb-0 p-3">All stock levels are healthy.</p>
         {% endif %}
       </div>
     </div>
@@ -72,10 +64,10 @@
 
   <div class="col-lg-6">
     <div class="card card-soft">
-      <div class="card-body">
-        <h2 class="h6 mb-3"><i class="bi bi-clock-history"></i> Recent orders</h2>
+      <div class="card-header">Recent orders</div>
+      <div class="card-body p-0">
         <div class="table-responsive">
-          <table class="table table-sm align-middle">
+          <table class="table mb-0">
             <thead><tr><th>#</th><th>Date</th><th>Customer</th><th>Status</th><th class="text-end">Amount</th></tr></thead>
             <tbody>
             {% for o in recent_orders %}
@@ -83,7 +75,7 @@
                 <td><a href="{{ url_for('orders.detail', order_id=o.order_id) }}">#{{ o.order_id }}</a></td>
                 <td>{{ o.order_date.strftime('%Y-%m-%d') }}</td>
                 <td>{{ o.customer }}</td>
-                <td><span class="badge bg-secondary">{{ o.status }}</span></td>
+                <td><span class="badge badge-soft">{{ o.status }}</span></td>
                 <td class="text-end">₱{{ '{:,.2f}'.format(o.total_amount|float) }}</td>
               </tr>
             {% endfor %}

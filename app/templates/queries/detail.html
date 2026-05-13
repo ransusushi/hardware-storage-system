@@ -2,9 +2,9 @@
 {% from "_macros.html" import page_header %}
 {% block title %}{{ entry.title }}{% endblock %}
 {% block content %}
-<a href="{{ url_for('queries.list_view') }}" class="btn btn-sm btn-outline-secondary mb-3"><i class="bi bi-arrow-left"></i> All queries</a>
+<a href="{{ url_for('queries.list_view') }}" class="btn btn-sm btn-outline-secondary mb-3">&larr; All queries</a>
 
-<h1 class="page-title h3">{{ entry.title }}</h1>
+<h1 class="page-title">{{ entry.title }}</h1>
 <div class="scenario-box mb-3">
   <strong>Real-world scenario:</strong> {{ entry.scenario }}<br>
   <small class="text-muted">Operations demonstrated: <em>{{ entry.operations }}</em></small>
@@ -13,7 +13,7 @@
 <div class="row g-3">
   <div class="col-lg-6">
     <div class="card card-soft h-100">
-      <div class="card-header bg-white"><strong>SQL</strong></div>
+      <div class="card-header">SQL</div>
       <div class="card-body">
         <pre class="algebra mb-0"><code>{{ entry.sql }}</code></pre>
         {% if runnable_sql != entry.sql %}
@@ -28,7 +28,7 @@
 
   <div class="col-lg-6">
     <div class="card card-soft h-100">
-      <div class="card-header bg-white"><strong>Relational algebra</strong></div>
+      <div class="card-header">Relational algebra</div>
       <div class="card-body">
         <div class="mb-2 text-muted small">Stepwise (intermediate relations):</div>
         <pre class="algebra mb-3"><code>{% for line in entry.stepwise_algebra %}{{ line }}
@@ -41,7 +41,7 @@
 </div>
 
 <form method="post" class="mt-3 mb-3">
-  <button class="btn btn-primary"><i class="bi bi-play-fill"></i> Run query</button>
+  <button class="btn btn-primary">Run query</button>
   <a class="btn btn-outline-secondary" href="{{ url_for('queries.detail', qid=entry.id) }}">Clear</a>
 </form>
 
@@ -50,8 +50,8 @@
     <div class="alert alert-danger"><strong>Error:</strong> {{ error }}</div>
   {% else %}
     <div class="card card-soft">
-      <div class="card-header bg-white d-flex justify-content-between">
-        <strong>Result</strong>
+      <div class="card-header d-flex justify-content-between">
+        <span>Result</span>
         <small class="text-muted">{{ rows|length }} row(s)</small>
       </div>
       <div class="card-body p-0">
