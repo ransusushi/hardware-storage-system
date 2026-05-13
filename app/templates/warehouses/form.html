@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}{{ 'Edit' if row else 'New' }} warehouse{% endblock %}
+{% block content %}
+{{ page_header(('Edit warehouse' if row else 'New warehouse')) }}
+<div class="card card-soft"><div class="card-body">
+<form method="post" class="row g-3">
+  <div class="col-md-6">
+    <label class="form-label">Name</label>
+    <input class="form-control" name="name" required value="{{ row.name if row else '' }}">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">City</label>
+    <input class="form-control" name="city" required value="{{ row.city if row else '' }}">
+  </div>
+  <div class="col-md-8">
+    <label class="form-label">Address</label>
+    <input class="form-control" name="address" value="{{ row.address if row else '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Capacity</label>
+    <input class="form-control" name="capacity" type="number" min="0" value="{{ row.capacity if row else 0 }}">
+  </div>
+  <div class="col-12 d-flex gap-2">
+    <button class="btn btn-primary"><i class="bi bi-check2"></i> Save</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('warehouses.list_view') }}">Cancel</a>
+  </div>
+</form>
+</div></div>
+{% endblock %}

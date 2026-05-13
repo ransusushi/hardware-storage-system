@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}{{ 'Edit' if row else 'New' }} supplier{% endblock %}
+{% block content %}
+{{ page_header(('Edit supplier' if row else 'New supplier')) }}
+<div class="card card-soft"><div class="card-body">
+<form method="post" class="row g-3">
+  <div class="col-md-6">
+    <label class="form-label">Name</label>
+    <input class="form-control" name="name" required value="{{ row.name if row else '' }}">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Contact person</label>
+    <input class="form-control" name="contact_name" value="{{ row.contact_name if row else '' }}">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Email</label>
+    <input class="form-control" name="email" type="email" value="{{ row.email if row else '' }}">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Phone</label>
+    <input class="form-control" name="phone" value="{{ row.phone if row else '' }}">
+  </div>
+  <div class="col-md-8">
+    <label class="form-label">Address</label>
+    <input class="form-control" name="address" value="{{ row.address if row else '' }}">
+  </div>
+  <div class="col-md-4">
+    <label class="form-label">Country</label>
+    <input class="form-control" name="country" value="{{ row.country if row else '' }}">
+  </div>
+  <div class="col-12 d-flex gap-2">
+    <button class="btn btn-primary"><i class="bi bi-check2"></i> Save</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('suppliers.list_view') }}">Cancel</a>
+  </div>
+</form>
+</div></div>
+{% endblock %}

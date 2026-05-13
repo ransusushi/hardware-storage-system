@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}{{ 'Edit' if row else 'New' }} order{% endblock %}
+{% block content %}
+{{ page_header(('Edit order #' ~ row.order_id) if row else 'New order') }}
+<div class="card card-soft"><div class="card-body">
+<form method="post" class="row g-3">
+  <div class="col-md-6">
+    <label class="form-label">Customer</label>
+    <select class="form-select" name="customer_id" required>
+      {% for c in customers %}
+      <option value="{{ c.customer_id }}" {% if row and row.customer_id == c.customer_id %}selected{% endif %}>{{ c.full_name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Status</label>
+    <select class="form-select" name="status">
+      {% for s in ['pending','paid','shipped','cancelled'] %}
+      <option value="{{ s }}" {% if row and row.status == s %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-12 d-flex gap-2">
+    <button class="btn btn-primary"><i class="bi bi-check2"></i> Save</button>
+    <a class="btn btn-outline-secondary" href="{{ url_for('orders.list_view') }}">Cancel</a>
+  </div>
+</form>
+</div></div>
+{% endblock %}

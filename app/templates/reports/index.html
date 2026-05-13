@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+{{ page_header('Reports', 'Snapshots built from UNION, DIFFERENCE, and complex conditions.') }}
+
+<div class="row g-3">
+  <div class="col-12">
+    <div class="card card-soft">
+      <div class="card-header bg-white">
+        <strong>Unified contact list</strong>
+        <span class="badge badge-soft ms-2">UNION</span>
+        <small class="text-muted ms-2">customers ∪ suppliers</small>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table mb-0 align-middle">
+            <thead><tr><th>Source</th><th>Name</th><th>Email</th></tr></thead>
+            <tbody>
+            {% for r in contacts %}
+              <tr><td><span class="badge bg-{{ 'primary' if r.source == 'Customer' else 'secondary' }}">{{ r.source }}</span></td>
+                  <td>{{ r.name }}</td><td>{{ r.email }}</td></tr>
+            {% else %}<tr><td colspan="3" class="text-muted text-center py-3">No data.</td></tr>{% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card card-soft h-100">
+      <div class="card-header bg-white">
+        <strong>Products never ordered</strong>
+        <span class="badge badge-soft ms-2">DIFFERENCE</span>
+      </div>
+      <div class="card-body p-0">
+        <table class="table mb-0 align-middle">
+          <thead><tr><th>SKU</th><th>Name</th><th>Category</th></tr></thead>
+          <tbody>
+          {% for r in unsold %}
+            <tr><td><code class="inline">{{ r.sku }}</code></td><td>{{ r.name }}</td><td>{{ r.category }}</td></tr>
+          {% else %}<tr><td colspan="3" class="text-muted text-center py-3">All products have been ordered at least once.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card card-soft h-100">
+      <div class="card-header bg-white">
+        <strong>Customers without orders</strong>
+        <span class="badge badge-soft ms-2">DIFFERENCE</span>
+      </div>
+      <div class="card-body p-0">
+        <table class="table mb-0 align-middle">
+          <thead><tr><th>Name</th><th>Email</th><th>Type</th></tr></thead>
+          <tbody>
+          {% for r in dormant_customers %}
+            <tr><td>{{ r.full_name }}</td><td>{{ r.email }}</td><td>{{ r.customer_type }}</td></tr>
+          {% else %}<tr><td colspan="3" class="text-muted text-center py-3">Every customer has placed at least one order.</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card card-soft">
+      <div class="card-header bg-white">
+        <strong>High-value, non-cancelled orders</strong>
+        <span class="badge badge-soft ms-2">AND · OR · NOT</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table mb-0 align-middle">
+            <thead><tr><th>#</th><th>Customer</th><th>Status</th><th>Date</th><th class="text-end">Total</th></tr></thead>
+            <tbody>
+            {% for r in big_orders %}
+            <tr>
+              <td><a href="{{ url_for('orders.detail', order_id=r.order_id) }}">#{{ r.order_id }}</a></td>
+              <td>{{ r.customer }}</td>
+              <td><span class="badge bg-secondary">{{ r.status }}</span></td>
+              <td>{{ r.order_date.strftime('%Y-%m-%d') }}</td>
+              <td class="text-end">₱{{ '{:,.2f}'.format(r.total_amount|float) }}</td>
+            </tr>
+            {% else %}<tr><td colspan="5" class="text-muted text-center py-3">No matching orders.</td></tr>{% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card card-soft">
+      <div class="card-header bg-white">
+        <strong>Low stock report</strong>
+        <span class="badge badge-soft ms-2">selection · projection</span>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table mb-0 align-middle">
+            <thead><tr><th>Product</th><th>Warehouse</th><th class="text-end">Quantity</th><th class="text-end">Reorder level</th></tr></thead>
+            <tbody>
+            {% for r in low_stock %}
+            <tr><td>{{ r.product }}</td><td>{{ r.warehouse }}</td>
+                <td class="text-end"><span class="badge bg-danger">{{ r.quantity }}</span></td>
+                <td class="text-end">{{ r.reorder_level }}</td></tr>
+            {% else %}<tr><td colspan="4" class="text-muted text-center py-3">All stock levels are healthy.</td></tr>{% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

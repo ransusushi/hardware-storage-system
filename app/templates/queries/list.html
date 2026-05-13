@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_header %}
+{% block title %}SQL & Relational Algebra Queries{% endblock %}
+{% block content %}
+{{ page_header('Query catalog',
+   'Every query below shows the SQL, its step-by-step relational algebra translation, and its compact form. You can run each query live against the database.') }}
+<div class="row g-3">
+{% for q in queries %}
+  <div class="col-md-6">
+    <a class="text-decoration-none" href="{{ url_for('queries.detail', qid=q.id) }}">
+      <div class="card card-soft h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <h5 class="mb-1">{{ q.title }}</h5>
+            <span class="badge badge-soft">{{ q.operations }}</span>
+          </div>
+          <p class="text-muted small mb-2">{{ q.scenario }}</p>
+          <div class="text-end small text-primary"><i class="bi bi-arrow-right-circle"></i> View & run</div>
+        </div>
+      </div>
+    </a>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}
